@@ -32,9 +32,8 @@ app.get("api/genres/:id", (request, response) => {
 });
 
 app.post("api/genres", (request, response) => {
-  const schema = Joi.object({ name: Joi.string().required() });
-  const validation = schema.validate(request.body);
-  
+  const validation = validateGenre(request.body);
+
   if (validation.error) {
     response.status(400).send(validation.error.details[0].message);
     return;
@@ -48,6 +47,38 @@ app.post("api/genres", (request, response) => {
   genres.push(genre);
   response.send(genre);
 });
+
+app.put("/api/genres/:id", (request, response) => {
+  // 1. Look out the genre
+  // If not exist, return 404
+  const genre = genres.find(
+    (genre) => genre.id === parseInt(request.params.id)
+  );
+
+  if (!genre) {
+    response.status(404).send("The genre with the given id was not found");
+    return;
+  }
+
+  // 2. Validate
+  // If invalid, return 400 - Bad Request
+  const validation = validateGenre(request.body);
+
+  if (validation.error) {
+    response.status(400).send(validation.error.details[0].message);
+    return;
+  }
+
+  // 3. Update Genre
+  // Return the updated Genre
+  genre.name = request.body.name;
+  response.send(genre);
+});
+
+function validateGenre(genre) {
+  const schema = Joi.object({ name: Joi.string().required() });
+  return schema.validate(request.body);
+}
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on port ${port} ...`));
