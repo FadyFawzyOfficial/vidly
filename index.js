@@ -23,10 +23,10 @@ app.get("api/genres/:id", (request, response) => {
     (genre) => genre.id === parseInt(request.params.id)
   );
 
-  if (!genre) {
-    response.status(404).send("The genre with the given id was not found");
-    return;
-  }
+  if (!genre)
+    return response
+      .status(404)
+      .send("The genre with the given id was not found");
 
   response.send(genre);
 });
@@ -34,10 +34,7 @@ app.get("api/genres/:id", (request, response) => {
 app.post("api/genres", (request, response) => {
   const { error } = validateGenre(request.body);
 
-  if (error) {
-    response.status(400).send(error.details[0].message);
-    return;
-  }
+  if (error) return response.status(400).send(error.details[0].message);
 
   const genre = {
     id: genres.length + 1,
@@ -55,19 +52,16 @@ app.put("/api/genres/:id", (request, response) => {
     (genre) => genre.id === parseInt(request.params.id)
   );
 
-  if (!genre) {
-    response.status(404).send("The genre with the given id was not found");
-    return;
-  }
+  if (!genre)
+    return response
+      .status(404)
+      .send("The genre with the given id was not found");
 
   // 2. Validate
   // If invalid, return 400 - Bad Request
   const { error } = validateGenre(request.body);
 
-  if (error) {
-    response.status(400).send(error.details[0].message);
-    return;
-  }
+  if (error) return response.status(400).send(error.details[0].message);
 
   // 3. Update Genre
   // Return the updated Genre
@@ -82,10 +76,10 @@ app.delete("api/genres/:id", (request, response) => {
     (genre) => genre.id === parseInt(request.params.id)
   );
 
-  if (!genre) {
-    response.status(404).send("The genre with the given id was not found");
-    return;
-  }
+  if (!genre)
+    return response
+      .status(404)
+      .send("The genre with the given id was not found");
 
   // Delete Genre
   const genreIndex = genres.indexOf(genre);
