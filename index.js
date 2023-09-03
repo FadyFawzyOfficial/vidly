@@ -1,3 +1,4 @@
+const Joi = require("joi");
 const express = require("express");
 const app = express();
 
@@ -31,9 +32,11 @@ app.get("api/genres/:id", (request, response) => {
 });
 
 app.post("api/genres", (request, response) => {
-  if (!request.body.name) {
-    // 400 Bad Request
-    response.status(400).send("Genre name is required");
+  const schema = Joi.object({ name: Joi.string().required() });
+  const validation = schema.validate(request.body);
+  
+  if (validation.error) {
+    response.status(400).send(validation.error.details[0].message);
     return;
   }
 
