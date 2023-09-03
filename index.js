@@ -31,6 +31,12 @@ app.get("api/genres/:id", (request, response) => {
 });
 
 app.post("api/genres", (request, response) => {
+  if (!request.body.name) {
+    // 400 Bad Request
+    response.status(400).send("Genre name is required");
+    return;
+  }
+
   const genre = {
     id: genres.length + 1,
     name: request.body.name,
