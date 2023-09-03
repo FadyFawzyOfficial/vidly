@@ -18,7 +18,7 @@ app.get("/", (request, response) => response.send("Welcome to Vidly"));
 
 app.get("/api/genres", (request, response) => response.send(genres));
 
-app.get("api/genres/:id", (request, response) => {
+app.get("/api/genres/:id", (request, response) => {
   const genre = genres.find(
     (genre) => genre.id === parseInt(request.params.id)
   );
@@ -31,7 +31,7 @@ app.get("api/genres/:id", (request, response) => {
   response.send(genre);
 });
 
-app.post("api/genres", (request, response) => {
+app.post("/api/genres", (request, response) => {
   const { error } = validateGenre(request.body);
 
   if (error) return response.status(400).send(error.details[0].message);
@@ -69,7 +69,7 @@ app.put("/api/genres/:id", (request, response) => {
   response.send(genre);
 });
 
-app.delete("api/genres/:id", (request, response) => {
+app.delete("/api/genres/:id", (request, response) => {
   // 1. Look out the genre
   // If not exist, return 404
   const genre = genres.find(
@@ -91,7 +91,7 @@ app.delete("api/genres/:id", (request, response) => {
 
 function validateGenre(genre) {
   const schema = Joi.object({ name: Joi.string().required() });
-  return schema.validate(request.body);
+  return schema.validate(genre);
 }
 
 const port = process.env.PORT || 3000;
