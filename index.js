@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
 
+app.use(express.json());
+
 const genres = [
   { id: 1, name: "All" },
   { id: 2, name: "Action" },
@@ -25,6 +27,16 @@ app.get("api/genres/:id", (request, response) => {
     return;
   }
 
+  response.send(genre);
+});
+
+app.post("api/genres", (request, response) => {
+  const genre = {
+    id: genres.length + 1,
+    name: request.body.name,
+  };
+
+  genres.push(genre);
   response.send(genre);
 });
 
