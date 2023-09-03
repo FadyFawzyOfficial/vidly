@@ -32,10 +32,10 @@ app.get("api/genres/:id", (request, response) => {
 });
 
 app.post("api/genres", (request, response) => {
-  const validation = validateGenre(request.body);
+  const { error } = validateGenre(request.body);
 
-  if (validation.error) {
-    response.status(400).send(validation.error.details[0].message);
+  if (error) {
+    response.status(400).send(error.details[0].message);
     return;
   }
 
@@ -62,10 +62,10 @@ app.put("/api/genres/:id", (request, response) => {
 
   // 2. Validate
   // If invalid, return 400 - Bad Request
-  const validation = validateGenre(request.body);
+  const { error } = validateGenre(request.body);
 
-  if (validation.error) {
-    response.status(400).send(validation.error.details[0].message);
+  if (error) {
+    response.status(400).send(error.details[0].message);
     return;
   }
 
