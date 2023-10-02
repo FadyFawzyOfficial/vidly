@@ -48,7 +48,11 @@ router.get("/:id", async (request, response) => {
 router.put("/:id", async (request, response) => {
   // 1. Look out the genre
   // If not exist, return 404
-  let genre = await Genre.findById(request.params.id);
+  const genre = await Genre.findByIdAndUpdate(request.params.id, {
+    $set: {
+      name: request.body.name,
+    },
+  });
 
   if (!genre)
     return response
@@ -57,15 +61,15 @@ router.put("/:id", async (request, response) => {
 
   // 2. Validate
   // If invalid, return 400 - Bad Request
-  const { error } = validateGenre(request.body);
+  // const { error } = validateGenre(request.body);
 
-  if (error) return response.status(400).send(error.details[0].message);
+  // if (error) return response.status(400).send(error.details[0].message);
 
   // 3. Update Genre
   // Return the updated Genre
-  genre.name = request.body.name;
+  // genre.name = request.body.name;
 
-  genre = await genre.save();
+  // genre = await genre.save();
 
   response.send(genre);
 });
