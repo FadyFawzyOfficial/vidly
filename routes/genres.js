@@ -16,7 +16,7 @@ const genreSchema = new mongoose.Schema({
 const Genre = mongoose.model("Genre", genreSchema);
 
 router.get("/", async (request, response) => {
-  const genres = await Genre.find();
+  const genres = await Genre.find().sort("name");
   response.send(genres);
 });
 
