@@ -48,11 +48,16 @@ router.get("/:id", async (request, response) => {
 router.put("/:id", async (request, response) => {
   // 1. Look out the genre
   // If not exist, return 404
-  const genre = await Genre.findByIdAndUpdate(request.params.id, {
-    $set: {
-      name: request.body.name,
+  const genre = await Genre.findByIdAndUpdate(
+    request.params.id,
+    {
+      $set: {
+        name: request.body.name,
+      },
     },
-  });
+    // To return the document after updating, and this optional object
+    { new: true }
+  );
 
   if (!genre)
     return response
