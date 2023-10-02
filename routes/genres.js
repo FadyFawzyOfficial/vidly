@@ -15,7 +15,10 @@ const genreSchema = new mongoose.Schema({
 //! Compile Genre Schema into a Genre Model (Class)
 const Genre = mongoose.model("Genre", genreSchema);
 
-router.get("/", (request, response) => response.send(genres));
+router.get("/", async (request, response) => {
+  const genres = await Genre.find().sort("name");
+  response.send(genres);
+});
 
 router.post("/", async (request, response) => {
   const { error } = validateGenre(request.body);
@@ -31,10 +34,8 @@ router.post("/", async (request, response) => {
   response.send(genre);
 });
 
-router.get("/:id", (request, response) => {
-  const genre = genres.find(
-    (genre) => genre.id === parseInt(request.params.id)
-  );
+router.get("/:id", async (request, response) => {
+  const genre = await Genre.findById(request.params.id);
 
   if (!genre)
     return response
