@@ -13,6 +13,9 @@ const genreSchema = new mongoose.Schema({
   name: String,
 });
 
+//! Compile Genre Schema into a Genre Model (Class)
+const Genre = mongoose.model("Genre", genreSchema);
+
 app.use(express.json());
 app.use("/api/genres", genres);
 
