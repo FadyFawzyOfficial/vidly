@@ -34,10 +34,8 @@ router.post("/", async (request, response) => {
   response.send(genre);
 });
 
-router.get("/:id", (request, response) => {
-  const genre = genres.find(
-    (genre) => genre.id === parseInt(request.params.id)
-  );
+router.get("/:id", async (request, response) => {
+  const genre = await Genre.findById(request.params.id);
 
   if (!genre)
     return response
