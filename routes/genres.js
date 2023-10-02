@@ -1,6 +1,15 @@
+const mongoose = require("mongoose");
 const Joi = require("joi");
 const express = require("express");
 const router = express.Router();
+
+const genreSchema = new mongoose.Schema({
+  id: Number,
+  name: String,
+});
+
+//! Compile Genre Schema into a Genre Model (Class)
+const Genre = mongoose.model("Genre", genreSchema);
 
 const genres = [
   { id: 1, name: "All" },
