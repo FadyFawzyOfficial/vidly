@@ -4,22 +4,16 @@ const express = require("express");
 const router = express.Router();
 
 const genreSchema = new mongoose.Schema({
-  id: Number,
-  name: String,
+  name: {
+    type: String,
+    required: true,
+    minLength: 3,
+    maxLength: 30,
+  },
 });
 
 //! Compile Genre Schema into a Genre Model (Class)
 const Genre = mongoose.model("Genre", genreSchema);
-
-const genres = [
-  { id: 1, name: "All" },
-  { id: 2, name: "Action" },
-  { id: 3, name: "Adventure" },
-  { id: 4, name: "Animation" },
-  { id: 5, name: "Biography" },
-  { id: 6, name: "Comedy" },
-  { id: 7, name: "Crime" },
-];
 
 router.get("/", (request, response) => response.send(genres));
 
