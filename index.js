@@ -8,6 +8,11 @@ mongoose
   .then(() => console.log("Connected to MongoDB"))
   .catch((error) => console.error("Could not connected to MongoDB..", error));
 
+const genreSchema = new mongoose.Schema({
+  id: Number,
+  name: String,
+});
+
 app.use(express.json());
 app.use("/api/genres", genres);
 
