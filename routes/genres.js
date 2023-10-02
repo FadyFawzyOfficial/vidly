@@ -17,17 +17,14 @@ const Genre = mongoose.model("Genre", genreSchema);
 
 router.get("/", (request, response) => response.send(genres));
 
-router.post("/", (request, response) => {
+router.post("/", async (request, response) => {
   const { error } = validateGenre(request.body);
 
   if (error) return response.status(400).send(error.details[0].message);
 
-  const genre = {
-    id: genres.length + 1,
-    name: request.body.name,
-  };
+  //! Create an Object based on Genre Class (Model)
+  let genre = new Genre({ name: request.body.name });
 
-  genres.push(genre);
   response.send(genre);
 });
 
