@@ -45,12 +45,10 @@ router.get("/:id", async (request, response) => {
   response.send(genre);
 });
 
-router.put("/:id", (request, response) => {
+router.put("/:id", async (request, response) => {
   // 1. Look out the genre
   // If not exist, return 404
-  const genre = genres.find(
-    (genre) => genre.id === parseInt(request.params.id)
-  );
+  let genre = await Genre.findById(request.params.id);
 
   if (!genre)
     return response
@@ -66,6 +64,9 @@ router.put("/:id", (request, response) => {
   // 3. Update Genre
   // Return the updated Genre
   genre.name = request.body.name;
+
+  genre = await genre.save();
+
   response.send(genre);
 });
 
