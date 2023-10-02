@@ -1,30 +1,33 @@
+const mongoose = require("mongoose");
 const Joi = require("joi");
 const express = require("express");
 const router = express.Router();
 
-const genres = [
-  { id: 1, name: "All" },
-  { id: 2, name: "Action" },
-  { id: 3, name: "Adventure" },
-  { id: 4, name: "Animation" },
-  { id: 5, name: "Biography" },
-  { id: 6, name: "Comedy" },
-  { id: 7, name: "Crime" },
-];
+const genreSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+    minLength: 3,
+    maxLength: 30,
+  },
+});
+
+//! Compile Genre Schema into a Genre Model (Class)
+const Genre = mongoose.model("Genre", genreSchema);
 
 router.get("/", (request, response) => response.send(genres));
 
-router.post("/", (request, response) => {
+router.post("/", async (request, response) => {
   const { error } = validateGenre(request.body);
 
   if (error) return response.status(400).send(error.details[0].message);
 
-  const genre = {
-    id: genres.length + 1,
-    name: request.body.name,
-  };
+  //! Create an Object based on Genre Class (Model)
+  let genre = new Genre({ name: request.body.name });
+  //! Save a Model (Genre) Data as a Document to MongoDB
+  genre = await genre.save();
 
-  genres.push(genre);
+  //* Return the saved genre to the client with its created id.
   response.send(genre);
 });
 
