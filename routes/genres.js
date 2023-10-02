@@ -24,7 +24,10 @@ router.post("/", async (request, response) => {
 
   //! Create an Object based on Genre Class (Model)
   let genre = new Genre({ name: request.body.name });
+  //! Save a Model (Genre) Data as a Document to MongoDB
+  genre = await genre.save();
 
+  //* Return the saved genre to the client with its created id.
   response.send(genre);
 });
 
