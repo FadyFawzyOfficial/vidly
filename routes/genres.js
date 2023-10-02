@@ -45,27 +45,33 @@ router.get("/:id", async (request, response) => {
   response.send(genre);
 });
 
-router.put("/:id", (request, response) => {
-  // 1. Look out the genre
-  // If not exist, return 404
-  const genre = genres.find(
-    (genre) => genre.id === parseInt(request.params.id)
+router.put("/:id", async (request, response) => {
+  //! We need to validate this genre that we are getting in the request before
+  //! attempting to update the database.
+  // 1. Validate
+  // If invalid, return 400 - Bad Request
+  const { error } = validateGenre(request.body);
+  if (error) return response.status(400).send(error.details[0].message);
+
+  const genre = await Genre.findByIdAndUpdate(
+    request.params.id,
+    {
+      $set: {
+        name: request.body.name,
+      },
+    },
+    // To return the document after updating, and this optional object
+    { new: true }
   );
 
+  // 2. Look out the genre
+  // If not exist, return 404
   if (!genre)
     return response
       .status(404)
       .send("The genre with the given id was not found");
 
-  // 2. Validate
-  // If invalid, return 400 - Bad Request
-  const { error } = validateGenre(request.body);
-
-  if (error) return response.status(400).send(error.details[0].message);
-
-  // 3. Update Genre
-  // Return the updated Genre
-  genre.name = request.body.name;
+  //* The genre we got here is the updated genre
   response.send(genre);
 });
 
