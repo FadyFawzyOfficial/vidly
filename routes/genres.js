@@ -15,7 +15,10 @@ const genreSchema = new mongoose.Schema({
 //! Compile Genre Schema into a Genre Model (Class)
 const Genre = mongoose.model("Genre", genreSchema);
 
-router.get("/", (request, response) => response.send(genres));
+router.get("/", async (request, response) => {
+  const genres = await Genre.find();
+  response.send(genres);
+});
 
 router.post("/", async (request, response) => {
   const { error } = validateGenre(request.body);
