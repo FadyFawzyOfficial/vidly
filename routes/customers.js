@@ -56,6 +56,38 @@ router.post("/", async (request, response) => {
   response.send(customer);
 });
 
+router.put("/:id", async (request, response) => {
+  //! We need to validate this customer that we are getting in the request before
+  //! attempting to update the database.
+  // 1. Validate
+  // If invalid, return 400 - Bad Request
+  const { error } = validateCustomer(request.body);
+  if (error) return response.status(400).send(error.details[0].message);
+
+  const customer = await Customer.findByIdAndUpdate(
+    request.params.id,
+    {
+      $set: {
+        name: request.body.name,
+        phone: request.body.phone,
+        isGold: request.body.isGold,
+      },
+    },
+    //* To Return the document after updating, add this optional object.
+    { new: true }
+  );
+
+  // 2. Look out the customer
+  // If not exist, return 404
+  if (!customer)
+    return response
+      .status(404)
+      .send("The Customer with the given id was not found");
+
+  //* The customer we got here it the updated customer
+  response.send(customer);
+});
+
 function validateCustomer(customer) {
   const schema = Joi.object({
     name: Joi.string().required(),
