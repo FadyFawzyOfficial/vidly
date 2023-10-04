@@ -88,6 +88,17 @@ router.put("/:id", async (request, response) => {
   response.send(customer);
 });
 
+router.delete("/:id", async (request, response) => {
+  const customer = await Customer.findByIdAndRemove(request.params.id);
+
+  if (!customer)
+    return response
+      .status(404)
+      .send("The customer with the given id wan not found");
+
+  response.send(customer);
+});
+
 function validateCustomer(customer) {
   const schema = Joi.object({
     name: Joi.string().required(),
