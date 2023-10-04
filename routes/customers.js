@@ -1,28 +1,6 @@
-const mongoose = require("mongoose");
-const Joi = require("joi");
+const { Customer, validate } = require("../models/customer");
 const express = require("express");
-const { route } = require("./genres");
 const router = express.Router();
-
-const customerSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    minLength: 2,
-    maxLength: 30,
-  },
-  phone: {
-    type: String,
-    required: true,
-  },
-  isGold: {
-    type: Boolean,
-    default: false,
-  },
-});
-
-//! Compile Customer Schema into a Customer Model (Class)
-const Customer = mongoose.model("Customer", customerSchema);
 
 router.get("/", async (request, response) => {
   const customers = await Customer.find().sort("name");
@@ -41,7 +19,7 @@ router.get("/:id", async (request, response) => {
 });
 
 router.post("/", async (request, response) => {
-  const { error } = validateCustomer(request.body);
+  const { error } = validate(request.body);
 
   if (error) return response.status(400).send(error.details[0].message);
 
@@ -64,7 +42,7 @@ router.put("/:id", async (request, response) => {
   //! attempting to update the database.
   // 1. Validate
   // If invalid, return 400 - Bad Request
-  const { error } = validateCustomer(request.body);
+  const { error } = validate(request.body);
   if (error) return response.status(400).send(error.details[0].message);
 
   const customer = await Customer.findByIdAndUpdate(
@@ -101,14 +79,5 @@ router.delete("/:id", async (request, response) => {
 
   response.send(customer);
 });
-
-function validateCustomer(customer) {
-  const schema = Joi.object({
-    name: Joi.string().min(2).max(30).required(),
-    phone: Joi.string().required(),
-    isGold: Joi.boolean(),
-  });
-  return schema.validate(customer);
-}
 
 module.exports = router;
