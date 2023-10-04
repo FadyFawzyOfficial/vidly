@@ -15,7 +15,10 @@ const customerSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  isGold: Boolean,
+  isGold: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 //! Compile Customer Schema into a Customer Model (Class)
@@ -101,9 +104,11 @@ router.delete("/:id", async (request, response) => {
 
 function validateCustomer(customer) {
   const schema = Joi.object({
-    name: Joi.string().required(),
+    name: Joi.string().min(2).max(30).required(),
     phone: Joi.string().required(),
+    isGold: Joi.boolean(),
   });
+  return schema.validate(customer);
 }
 
 module.exports = router;
