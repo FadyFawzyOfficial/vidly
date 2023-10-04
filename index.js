@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const express = require("express");
 const genres = require("./routes/genres");
+const customers = require("./routes/customers");
 const app = express();
 
 mongoose
@@ -10,6 +11,7 @@ mongoose
 
 app.use(express.json());
 app.use("/api/genres", genres);
+app.use("/api/customers", customers);
 
 app.get("/", (request, response) => response.send("Welcome to Vidly"));
 
